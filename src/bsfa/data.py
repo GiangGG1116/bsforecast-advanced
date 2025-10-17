@@ -62,14 +62,14 @@ class BalanceSheetDataProcessor:
             stock = yf.Ticker(ticker)
             balance_sheet = stock.balance_sheet
             if balance_sheet is None or balance_sheet.empty:
-                raise ValueError(f"Không tìm thấy dữ liệu balance sheet cho {ticker}")
+                raise ValueError(f"Balance sheet data not found for {ticker}")
 
             filtered = {}
             for yahoo_field, our_field in self.core_fields.items():
                 if yahoo_field in balance_sheet.index:
                     filtered[our_field] = balance_sheet.loc[yahoo_field]
                 else:
-                    print(f"Cảnh báo: Thiếu trường {yahoo_field} cho {ticker}")
+                    print(f"Warning: Missing field {yahoo_field} for {ticker}")
                     filtered[our_field] = pd.Series([np.nan] * len(balance_sheet.columns), index=balance_sheet.columns)
 
             df = pd.DataFrame(filtered).sort_index(ascending=True)
@@ -78,7 +78,7 @@ class BalanceSheetDataProcessor:
             df = df.reindex(columns=self.feature_names_25, fill_value=0)
             return df
         except Exception as e:
-            print(f"Lỗi khi lấy dữ liệu cho {ticker}: {e}")
+            print(f"Error fetching data for {ticker}: {e}")
             return pd.DataFrame()
 
     def calculate_derived_fields(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -114,7 +114,7 @@ class BalanceSheetDataProcessor:
 
     def validate_data_quality(self, df: pd.DataFrame):
         if df.empty:
-            return {"error": "DataFrame rỗng"}
+            return {"error": "DataFrame is empty"}
         res = {}
         missing_pct = df.isnull().mean() * 100
         res["missing_values"] = missing_pct[missing_pct > 0]

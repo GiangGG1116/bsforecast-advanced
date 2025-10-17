@@ -56,7 +56,7 @@ class BalanceSheetForecaster:
         else:
             arr = np.asarray(df_or_arr)
             if arr.shape[1] != self.feature_dim:
-                raise ValueError(f"Input có {arr.shape[1]} features, cần {self.feature_dim}.")
+                raise ValueError(f"Input has {arr.shape[1]} features, expected {self.feature_dim}.")
         return arr
 
     def _prepare_train_val(self, data_dict, val_ratio=0.2):
@@ -102,7 +102,7 @@ class BalanceSheetForecaster:
         X_tr, y_tr, X_val, y_val = self._prepare_train_val(data_dict, val_ratio=val_ratio)
         if X_tr.shape[0] == 0:
             total = sum(len(df) for df in data_dict.values())
-            raise ValueError(f"Không đủ mẫu train. Tổng điểm: {total}, lookback={self.lookback_periods}.")
+            raise ValueError(f"Not enough training samples. Total points: {total}, lookback={self.lookback_periods}.")
 
         X_tr_flat = X_tr.reshape(-1, self.feature_dim)
         self.x_scaler.fit(X_tr_flat)
@@ -148,10 +148,10 @@ class BalanceSheetForecaster:
 
     def forecast(self, historical_data_array, n_periods=1):
         if not self.is_trained:
-            raise ValueError("Mô hình chưa được huấn luyện")
+            raise ValueError("Model is not trained")
         seq = self._ensure_feature_order(historical_data_array)
         if seq.shape[0] < self.lookback_periods:
-            raise ValueError(f"Cần >= {self.lookback_periods} điểm lịch sử để dự báo")
+            raise ValueError(f"Need >= {self.lookback_periods} historical points to forecast")
         forecasts = []
         cur = seq[-self.lookback_periods:].copy()
         for _ in range(n_periods):

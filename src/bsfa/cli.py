@@ -14,15 +14,15 @@ def train(
     tickers: List[str] = typer.Option(
         ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA"],
         "--tickers", "-t",
-        help="Danh sách tickers. Dùng nhiều lần: -t AAPL -t MSFT ...",
+        help="List of tickers. Use multiple times: -t AAPL -t MSFT ...",
         show_default=True,
     ),
-    lookback: int = typer.Option(2, "--lookback", help="Số bước lịch sử cho LSTM"),
-    epochs: int = typer.Option(80, "--epochs", help="Số epoch huấn luyện"),
-    val_ratio: float = typer.Option(0.2, "--val-ratio", help="Tỷ lệ validation"),
+    lookback: int = typer.Option(2, "--lookback", help="Number of historical steps for LSTM"),
+    epochs: int = typer.Option(80, "--epochs", help="Number of training epochs"),
+    val_ratio: float = typer.Option(0.2, "--val-ratio", help="Validation ratio"),
     batch_size: int = typer.Option(16, "--batch-size", help="Batch size"),
     patience: int = typer.Option(10, "--patience", help="EarlyStopping patience"),
-    smape_alpha: float = typer.Option(0.4, "--smape-alpha", help="Hệ số α cho sMAPE core"),
+    smape_alpha: float = typer.Option(0.4, "--smape-alpha", help="Alpha coefficient for sMAPE core"),
 ):
     """Train the model with original-space constraints and robust loss."""
     train_pipeline(tickers, lookback, epochs, val_ratio, batch_size, patience, smape_alpha)
@@ -38,11 +38,11 @@ def forecast(
     feature_names = FEATURE_NAMES_25
     df = proc.get_balance_sheet_data(ticker)
     if df.empty or len(df) <= lookback:
-        typer.echo(f"Dữ liệu quá ít cho {ticker}")
+        typer.echo(f"Not enough data for {ticker}")
         raise typer.Exit(code=1)
 
     fc = BalanceSheetForecaster(lookback_periods=lookback)
-    # train nhanh trên 1 ticker để khởi tạo scaler/model
+    # quick training on a single ticker to initialize scaler/model
     fc.train({ticker: df}, feature_names=feature_names, epochs=5, val_ratio=0.2, batch_size=8, patience=3, smape_alpha=0.4)
 
     hist_window = df[feature_names].values[-(lookback+1):-1]

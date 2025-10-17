@@ -1,0 +1,85 @@
+# ===========================================
+# 🐍 Python
+# ===========================================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Byte-compiled / optimized / DLL files
+*.so
+*.dll
+*.dylib
+
+# ===========================================
+# 🧪 Virtual environments / installs
+# ===========================================
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# ===========================================
+# 📦 Build artifacts
+# ===========================================
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+*.whl
+
+# ===========================================
+# 🧠 TensorFlow / Model training
+# ===========================================
+checkpoints/
+saved_models/
+artifacts/
+logs/
+runs/
+*.h5
+*.pb
+*.ckpt*
+events.out.tfevents.*
+
+# ===========================================
+# 📊 Notebooks & temporary data
+# ===========================================
+.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
+*.csv
+*.tsv
+*.xlsx
+*.xls
+*.json
+*.parquet
+
+# ===========================================
+# 🖼️ Plots / Outputs
+# ===========================================
+*.png
+*.jpg
+*.jpeg
+*.svg
+
+# ===========================================
+# ⚙️ IDE / Editor config
+# ===========================================
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# ===========================================
+# 🧰 System / OS files
+# ===========================================
+.DS_Store
+Thumbs.db
+
+# ===========================================
+# 🔒 Secrets / config
+# ===========================================
+*.env
+.env.*
+.envrc
